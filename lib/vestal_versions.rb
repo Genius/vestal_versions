@@ -118,7 +118,10 @@ module VestalVersions
       include Deletion
 
       prepare_versioned_options(options)
-      has_many :versions, options, &block
+
+      # pull the order out so that we don't give rails an option it doesn't understand
+      versions_order = options.delete(:order)
+      has_many :versions, -> { order(versions_order) }, options, &block
     end
   end
 end

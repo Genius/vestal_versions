@@ -1,7 +1,20 @@
-ActiveRecord::Base.establish_connection(
-  :adapter  => 'sqlite3',
-  :database => File.expand_path('../../test.db', __FILE__)
-)
+DATABASE_CONFIG = {
+  :adapter => 'postgresql',
+  :host => ENV.fetch('PGHOST', 'localhost'),
+  :port => ENV.fetch('PGPORT', 5432),
+  :username => ENV.fetch('PGUSER', 'postgres'),
+  :password => ENV.fetch('PGPASSWORD', 'postgres'),
+  :database => ENV.fetch('PGDATABASE', 'vestal_versions_test')
+}
+
+begin
+  ActiveRecord::Base.establish_connection(DATABASE_CONFIG)
+  ActiveRecord::Base.connection
+rescue ActiveRecord::NoDatabaseError
+  ActiveRecord::Base.establish_connection(DATABASE_CONFIG.merge(:database => 'postgres'))
+  ActiveRecord::Base.connection.create_database(DATABASE_CONFIG[:database])
+  ActiveRecord::Base.establish_connection(DATABASE_CONFIG)
+end
 
 class CreateSchema < ActiveRecord::Migration
   def self.up

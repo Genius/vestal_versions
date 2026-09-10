@@ -8,13 +8,13 @@ require 'vestal_versions'
 require 'bundler'
 Bundler.require(:test)
 
+require 'rspec/its'
+
 RSpec.configure do |c|
+  c.expect_with(:rspec) { |e| e.syntax = [:should, :expect] }
+
   c.before(:suite) do
     CreateSchema.suppress_messages{ CreateSchema.migrate(:up) }
-  end
-
-  c.after(:suite) do
-    FileUtils.rm_rf(File.expand_path('../test.db', __FILE__))
   end
 
   c.after(:each) do
@@ -25,4 +25,4 @@ RSpec.configure do |c|
   c.order = 'random'
 end
 
-Dir[File.expand_path('../support/*.rb', __FILE__)].each{|f| require f }
+Dir[File.expand_path('../support/*.rb', __FILE__)].each { |f| require f }
