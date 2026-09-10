@@ -21,7 +21,7 @@ class CreateSchema < ActiveRecord::Migration
     create_table :users, :force => true do |t|
       t.string :first_name
       t.string :last_name
-      t.timestamps
+      t.timestamps :null => false
     end
 
     create_table :versions, :force => true do |t|
@@ -32,7 +32,7 @@ class CreateSchema < ActiveRecord::Migration
       t.integer :number
       t.integer :reverted_from
       t.string :tag
-      t.timestamps
+      t.timestamps :null => false
     end
   end
 end

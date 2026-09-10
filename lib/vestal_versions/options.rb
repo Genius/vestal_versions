@@ -25,7 +25,7 @@ module VestalVersions
           :dependent => :delete_all
         )
         options.reverse_merge!(
-          :order => "#{options[:class_name].constantize.table_name}.number ASC"
+          :order => options[:class_name].constantize.arel_table[:number].asc
         )
 
         class_attribute :vestal_versions_options
