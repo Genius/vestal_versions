@@ -26,6 +26,9 @@ module VestalVersions
       to_number = versions.number_at(value)
 
       changes_between(version, to_number).each do |attribute, change|
+        # a record's history can name columns that have since been dropped from the schema
+        next unless self.class.column_names.include?(attribute.to_s)
+
         write_attribute(attribute, change.last)
       end
 

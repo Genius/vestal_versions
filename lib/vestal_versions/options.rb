@@ -24,9 +24,9 @@ module VestalVersions
           :class_name => 'VestalVersions::Version',
           :dependent => :delete_all
         )
-        # options.reverse_merge!(
-        #   :order => "#{options[:class_name].constantize.table_name}.#{connection.quote_column_name('number')} ASC"
-        # )
+        options.reverse_merge!(
+          :order => options[:class_name].constantize.arel_table[:number].asc
+        )
 
         class_attribute :vestal_versions_options
         self.vestal_versions_options = options.dup

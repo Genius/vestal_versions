@@ -1,21 +1,3 @@
-# See: https://github.com/rails/rails/issues/11026
-if ActiveRecord::VERSION::MAJOR == 3 && ActiveRecord::VERSION::MINOR == 0 && RUBY_VERSION >= "2.0.0"
-  module ActiveRecord
-    module Associations
-      class AssociationProxy
-        def send(method, *args)
-          if proxy_respond_to?(method, true)
-            super
-          else
-            load_target
-            @target.send(method, *args)
-          end
-        end
-      end
-    end
-  end
-end
-
 module VestalVersions
   # An extension module for the +has_many+ association with versions.
   module Versions
@@ -31,13 +13,16 @@ module VestalVersions
       return [] if from_number.nil? || to_number.nil?
 
       condition = (from_number == to_number) ? to_number : Range.new(*[from_number, to_number].sort)
-      where(:number => condition).order("#{table_name}.#{connection.quote_column_name('number')} #{(from_number > to_number) ? 'DESC' : 'ASC'}").to_a
+      direction = (from_number > to_number) ? :desc : :asc
+
+      # important: the association carries a default ordering, so it has to be replaced rather than appended to.
+      where(:number => condition).reorder(klass.arel_table[:number].send(direction)).to_a
     end
 
     # Returns all version records created before the version associated with the given value.
     def before(value)
       return [] if (number = number_at(value)).nil?
-      where("#{table_name}.#{connection.quote_column_name('number')} < #{number}").to_a
+      where(klass.arel_table[:number].lt(number)).to_a
     end
 
     # Returns all version records created after the version associated with the given value.
@@ -45,7 +30,7 @@ module VestalVersions
     # This is useful for dissociating records during use of the +reset_to!+ method.
     def after(value)
       return [] if (number = number_at(value)).nil?
-      where("#{table_name}.#{connection.quote_column_name('number')} > #{number}").to_a
+      where(klass.arel_table[:number].gt(number)).to_a
     end
 
     # Returns a single version associated with the given value. The following formats are valid:
@@ -64,7 +49,7 @@ module VestalVersions
     #   untouched.
     def at(value)
       case value
-        when Date, Time then where("#{table_name}.created_at <= ?", value.to_time).last
+        when Date, Time then where(klass.arel_table[:created_at].lteq(value.to_time)).last
         when Numeric then find_by_number(value.floor)
         when String then find_by_tag(value)
         when Symbol then respond_to?(value) ? send(value) : nil

@@ -92,6 +92,25 @@ describe VestalVersions::Reversion do
     subject.versions.last.reverted_from.should be_nil
   end
 
+  context 'with versions recording a column since dropped from the schema' do
+    before do
+      subject.versions.each do |version|
+        modifications = (version.modifications || {}).merge('nickname' => ['Steve-o', 'Stevie'])
+        version.update_attribute(:modifications, modifications)
+      end
+    end
+
+    it 'ignores the column that no longer exists' do
+      expect { subject.revert_to(first_version) }.to_not raise_error
+    end
+
+    it 'still reverts the columns that do exist' do
+      subject.revert_to!(first_version)
+
+      subject.name.should == names.first
+    end
+  end
+
   it "clears the reverted_from if the model is reloaded after a revert_to without a save" do
     subject.revert_to(1)
     subject.reload
