@@ -1,4 +1,4 @@
-= Vestal Versions
+= Vestal Versions (Genius fork)
 
 {<img src="https://badge.fury.io/rb/vestal_versions.png" alt="Gem Version" />}[http://badge.fury.io/rb/vestal_versions]
 {<img src="https://travis-ci.org/laserlemon/vestal_versions.png?branch=master" alt="Build Status" />}[https://travis-ci.org/laserlemon/vestal_versions]
@@ -16,7 +16,8 @@ And that's just what <tt>vestal_versions</tt> does. Not only can a model be reve
 
 == Compatibility
 
-Tested with Active Record 3.2.16 with Ruby 1.9.3 and 1.9.2.
+Requires Active Record 4.2. Rails 4.2 is end-of-life upstream, so the test suite runs against the
+Rails LTS builds hosted at gems.railslts.com.
 
 == Installation
 
