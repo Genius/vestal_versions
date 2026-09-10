@@ -3,6 +3,7 @@
  * [BREAKING] Drop support for Active Record 3.0, 3.1, 3.2 and 4.0; only Active Record 4.2 (Rails LTS) is supported
  * [FIX] Restore the default `number ASC` ordering of the versions association, which was lost in the Rails 4 port when `has_many` dropped its `:order` option
  * [FIX] `Versions#between` replaces the association's ordering rather than appending to it
+ * [FIX] `revert_to` skips columns that have since been dropped from the schema, which raised `ActiveModel::MissingAttributeError` under Rails 4
  * The versions association's conditions and ordering are built with Arel, so identifiers are quoted by whichever adapter is in use
  * The generated migration states `:null => false` on its timestamps, matching the Rails 5 default (and silencing a Rails 4.2 deprecation warning)
  * The test suite now runs on Ruby 3.3 against PostgreSQL, under RSpec 3
