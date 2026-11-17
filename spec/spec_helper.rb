@@ -25,4 +25,8 @@ RSpec.configure do |c|
   c.order = 'random'
 end
 
+if ActiveRecord::Base.respond_to?(:belongs_to_required_by_default)
+  ActiveRecord::Base.belongs_to_required_by_default = true
+end
+
 Dir[File.expand_path('../support/*.rb', __FILE__)].each { |f| require f }

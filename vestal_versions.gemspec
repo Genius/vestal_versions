@@ -11,8 +11,8 @@ Gem::Specification.new do |gem|
   gem.homepage    = 'http://github.com/laserlemon/vestal_versions'
   gem.license     = 'MIT'
 
-  gem.add_dependency 'activerecord', '~> 4.2'
-  gem.add_dependency 'activesupport', '~> 4.2'
+  gem.add_dependency 'activerecord', '>= 4.2', '< 5.3'
+  gem.add_dependency 'activesupport', '>= 4.2', '< 5.3'
 
   gem.add_development_dependency 'rake', '~> 13.0'
 

@@ -48,7 +48,14 @@ module VestalVersions
 			# creation. Incremental changes are reset when the record is saved because they represent
 			# a subset of the dirty attribute changes, which are reset upon save.
 			def incremental_version_changes
-				changes.slice(*versioned_columns)
+				saved_version_changes.slice(*versioned_columns)
+			end
+
+			# Rails 5.1 split dirty tracking in two. Within an +after_update+ callback, +changes+
+			# describes the record's in-memory state, which the save has already emptied, while
+			# +saved_changes+ describes what was just written.
+			def saved_version_changes
+				respond_to?(:saved_changes) ? saved_changes : changes
 			end
 
 			# Simply resets the cumulative changes after version creation.

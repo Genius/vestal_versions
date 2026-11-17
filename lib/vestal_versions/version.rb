@@ -7,12 +7,11 @@ module VestalVersions
     include Comparable
     include ActiveSupport::Configurable
 
-    # Associate polymorphically with the parent record.
-    belongs_to :versioned, :polymorphic => true
+    versioned_options = { :polymorphic => true }
+    versioned_options[:optional] = true if ActiveRecord::VERSION::MAJOR >= 5
 
-    if ActiveRecord::VERSION::MAJOR == 3
-      attr_accessible :modifications, :number, :user, :tag, :reverted_from
-    end
+    # Associate polymorphically with the parent record.
+    belongs_to :versioned, versioned_options
 
     # ActiveRecord::Base#changes is an existing method, so before serializing the +changes+ column,
     # the existing +changes+ method is undefined. The overridden +changes+ method pertained to

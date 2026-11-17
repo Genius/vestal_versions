@@ -16,8 +16,8 @@ And that's just what <tt>vestal_versions</tt> does. Not only can a model be reve
 
 == Compatibility
 
-Requires Active Record 4.2. Rails 4.2 is end-of-life upstream, so the test suite runs against the
-Rails LTS builds hosted at gems.railslts.com.
+Requires Active Record 4.2 or 5.2. Both are end-of-life upstream, so the test suite runs against
+the Rails LTS builds hosted at gems.railslts.com, on Ruby 3.3.
 
 == Installation
 

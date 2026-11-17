@@ -16,7 +16,11 @@ rescue ActiveRecord::NoDatabaseError
   ActiveRecord::Base.establish_connection(DATABASE_CONFIG)
 end
 
-class CreateSchema < ActiveRecord::Migration
+# Rails 5 requires a migration to state the release it was written for. This schema is shared
+# by every supported version, so it stays on 4.2 semantics.
+MigrationClass = ActiveRecord::VERSION::MAJOR >= 5 ? ActiveRecord::Migration[4.2] : ActiveRecord::Migration
+
+class CreateSchema < MigrationClass
   def self.up
     create_table :users, :force => true do |t|
       t.string :first_name
